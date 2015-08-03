@@ -28,12 +28,13 @@ class GulpCommand(Command):
               "{0} not found. You must specify --executable or -e"
               " with the gulp path".format(self.executable)
               )
-      if not os.path.isdir(self.instance_dir):
+      if self.instance_dir is None or not os.path.isdir(self.instance_dir):
           raise DistutilsArgError(
               "project dir {0} not found."
               " You must specify --instance_dir or -p"
               " with the project instance_dir".format(self.instance_dir)
               )
+      self.gulpfile_path = os.path.join(self.instance_dir, self.gulpfile)
       if not os.path.isfile(self.gulpfile_path):
           raise DistutilsArgError(
               "gulpfile {0} not found."
