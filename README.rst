@@ -33,7 +33,7 @@ uglyfication, etc).
 
 A big ``TODO`` (hey, contributors?! I'm talking to you!):
 
-* provid tests
+* provide tests
 
 Authors
 =======
