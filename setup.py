@@ -20,8 +20,8 @@ setup(name='build_commands',
         "Topic :: Internet :: WWW/HTTP",
         ],
       author='Davide Moro',
-      author_email='davide moro',
-      url='',
+      author_email='davide.moro@gmail.com',
+      url='https://github.com/davidemoro/build_commands',
       keywords='web python gulp npm bower yeoman',
       packages=find_packages(),
       include_package_data=True,
@@ -30,5 +30,9 @@ setup(name='build_commands',
       tests_require=requires,
       test_suite="build_commands",
       entry_points="""\
+      [distutils.commands]
+      npm = build_commands.setuptools_commands:NpmCommand
+      bower = build_commands.setuptools_commands:BowerCommand
+      gulp = build_commands.setuptools_commands:GulpCommand
       """,
       )
