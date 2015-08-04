@@ -31,7 +31,7 @@ Yeoman project with::
 And all your frontend stuff will be processed automatically (SASS, minification,
 uglyfication, etc).
 
-A big ``TODO`` (hey, contributors?! I'm talking to you!):
+A big ``TODO``:
 
 * provide tests
 
