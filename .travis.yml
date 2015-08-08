@@ -9,6 +9,6 @@ install:
   - python setup.py develop
   - python setup.py test
 script:
-  - py.test --tb=native --cov=build_commands --cov-report=term-missing
+  - py.test --cov=build_commands --cov-report=term-missing
 after_success:
   codecov
