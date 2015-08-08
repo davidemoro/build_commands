@@ -1,17 +1,6 @@
-"""develop tests
+"""npm tests
 """
-import sys
-import os
-import shutil
-import tempfile
 import unittest
-import tempfile
-import site
-
-from distutils.errors import DistutilsError
-from setuptools.command import easy_install as easy_install_pkg
-from setuptools.compat import StringIO
-from setuptools.dist import Distribution
 
 
 SETUP_PY = """\
@@ -29,58 +18,9 @@ INIT_PY = """print "foo"
 
 class TestNpmTest(unittest.TestCase):
 
-    def setUp(self):
-        if sys.version < "2.6" or hasattr(sys, 'real_prefix'):
-            return
-
-        # Directory structure
-        self.dir = tempfile.mkdtemp()
-        os.mkdir(os.path.join(self.dir, 'foo'))
-        # setup.py
-        setup = os.path.join(self.dir, 'setup.py')
-        f = open(setup, 'w')
-        f.write(SETUP_PY)
-        f.close()
-        self.old_cwd = os.getcwd()
-        # foo/__init__.py
-        init = os.path.join(self.dir, 'foo', '__init__.py')
-        f = open(init, 'w')
-        f.write(INIT_PY)
-        f.close()
-
-        os.chdir(self.dir)
-        self.old_base = site.USER_BASE
-        site.USER_BASE = tempfile.mkdtemp()
-        self.old_site = site.USER_SITE
-        site.USER_SITE = tempfile.mkdtemp()
-
-    def tearDown(self):
-        if sys.version < "2.6" or hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
-            return
-
-        os.chdir(self.old_cwd)
-        shutil.rmtree(self.dir)
-        shutil.rmtree(site.USER_BASE)
-        shutil.rmtree(site.USER_SITE)
-        site.USER_BASE = self.old_base
-        site.USER_SITE = self.old_site
-
-    def test_npm_no_command(self):
-        dist = Distribution(
-            dict(name='foo',
-                 packages=['foo'],
-                 use_2to3=True,
-                 version='0.0',
-                 ))
-        dist.script_name = 'setup.py'
-        cmd = NpmCommand(dist)
-        cmd.user = 1
-        from distutils.errors import DistutilsArgError
-        with self.assertRaises(DistutilsArgError):
-            cmd.ensure_finalized()
-
-    def test_npm_no_command(self):
-        return
+    def test_finalize_options_no_command(self):
+        """ npm command not found """
+        from setuptools.dist import Distribution
         dist = Distribution(
             dict(name='foo',
                  packages=['foo'],
@@ -90,53 +30,78 @@ class TestNpmTest(unittest.TestCase):
         dist.script_name = 'setup.py'
         from build_commands import NpmCommand
         cmd = NpmCommand(dist)
-        cmd.user = 1
-        import pdb
-        pdb.set_trace()
-        cmd.ensure_finalized()
-        cmd.install_dir = site.USER_SITE
-        cmd.user = 1
+        from distutils.errors import DistutilsArgError
+        with self.assertRaises(DistutilsArgError):
+            cmd.ensure_finalized()
+
+    def test_finalize_options_no_instance_dir(self):
+        """ instance_dir not found """
+        from setuptools.dist import Distribution
+        dist = Distribution(
+            dict(name='foo',
+                 packages=['foo'],
+                 use_2to3=True,
+                 version='0.0',
+                 ))
+        dist.script_name = 'setup.py'
+        from build_commands import NpmCommand
+        cmd = NpmCommand(dist)
+        from distutils.errors import DistutilsArgError
+        import mock
+        with mock.patch('build_commands.npm.find_executable') \
+                as find_executable:
+            find_executable.return_value = '/tmp/npm'
+            with self.assertRaises(DistutilsArgError):
+                cmd.ensure_finalized()
+
+    def test_finalize_options_ok(self):
+        """ instance_dir and command ok """
+        from setuptools.dist import Distribution
+        dist = Distribution(
+            dict(name='foo',
+                 packages=['foo'],
+                 use_2to3=True,
+                 version='0.0',
+                 ))
+        dist.script_name = 'setup.py'
+        from build_commands import NpmCommand
+        cmd = NpmCommand(dist)
+        import tempfile
+        cmd.instance_dir = tempfile.mkdtemp()
+        import mock
+        with mock.patch('build_commands.npm.find_executable') \
+                as find_executable:
+            find_executable.return_value = '/tmp/npm'
+            cmd.ensure_finalized()
+
+    def test_run_ok(self):
+        """ Assert spawn is called with the right parameters """
+        from setuptools.dist import Distribution
+        dist = Distribution(
+            dict(name='foo',
+                 packages=['foo'],
+                 use_2to3=True,
+                 version='0.0',
+                 ))
+        dist.script_name = 'setup.py'
+        from build_commands import NpmCommand
+        cmd = NpmCommand(dist)
+        import tempfile
+        cmd.instance_dir = tempfile.mkdtemp()
+        import mock
+        with mock.patch('build_commands.npm.find_executable') \
+                as find_executable:
+            find_executable.return_value = '/tmp/npm'
+            cmd.ensure_finalized()
+
+        spawn_mock = mock.MagicMock()
+        cmd.spawn = spawn_mock
+        import sys
         old_stdout = sys.stdout
-        sys.stdout = StringIO()
         try:
             cmd.run()
         finally:
             sys.stdout = old_stdout
 
-#        # let's see if we got our egg link at the right place
-#        content = os.listdir(site.USER_SITE)
-#        content.sort()
-#        self.assertEqual(content, ['easy-install.pth', 'foo.egg-link'])
-#
-#        # Check that we are using the right code.
-#        egg_link_file = open(os.path.join(site.USER_SITE, 'foo.egg-link'), 'rt')
-#        try:
-#            path = egg_link_file.read().split()[0].strip()
-#        finally:
-#            egg_link_file.close()
-#        init_file = open(os.path.join(path, 'foo', '__init__.py'), 'rt')
-#        try:
-#            init = init_file.read().strip()
-#        finally:
-#            init_file.close()
-#        if sys.version < "3":
-#            self.assertEqual(init, 'print "foo"')
-#        else:
-#            self.assertEqual(init, 'print("foo")')
-#
-#    def notest_develop_with_setup_requires(self):
-#
-#        wanted = ("Could not find suitable distribution for "
-#                  "Requirement.parse('I-DONT-EXIST')")
-#        old_dir = os.getcwd()
-#        os.chdir(self.dir)
-#        try:
-#            try:
-#                dist = Distribution({'setup_requires': ['I_DONT_EXIST']})
-#            except DistutilsError:
-#                e = sys.exc_info()[1]
-#                error = str(e)
-#                if error ==  wanted:
-#                    pass
-#        finally:
-#            os.chdir(old_dir)
+        expected = ['npm', 'install', '--prefix', cmd.instance_dir, cmd.instance_dir]
+        spawn_mock.assert_called_once_with(expected)

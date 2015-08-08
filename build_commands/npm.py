@@ -25,7 +25,7 @@ class NpmCommand(Command):
               "{0} not found. You must specify --executable or -e"
               " with the npm instance_dir".format(self.executable)
               )
-      if not os.path.isdir(self.instance_dir):
+      if self.instance_dir is None or not os.path.isdir(self.instance_dir):
           raise DistutilsArgError(
               "project dir {0} not found."
               " You must specify --instance_dir or -p"
