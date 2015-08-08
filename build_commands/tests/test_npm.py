@@ -22,6 +22,26 @@ class TestNpmTest:
         with pytest.raises(DistutilsArgError):
             cmd.finalize_options()
 
+    def test_finalize_options_no_comand_2(self):
+        """ npm command not found """
+        from setuptools.dist import Distribution
+        dist = Distribution(
+            dict(name='foo',
+                 packages=['foo'],
+                 use_2to3=True,
+                 version='0.0',
+                 ))
+        dist.script_name = 'setup.py'
+        from build_commands import NpmCommand
+        cmd = NpmCommand(dist)
+        from distutils.errors import DistutilsArgError
+        import mock
+        with mock.patch('build_commands.npm.find_executable') \
+                as find_executable:
+            find_executable.return_value = None
+            with pytest.raises(DistutilsArgError):
+                cmd.finalize_options()
+
     def test_finalize_options_no_instance_dir(self):
         """ instance_dir not found """
         from setuptools.dist import Distribution
