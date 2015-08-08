@@ -20,7 +20,7 @@ class TestNpmTest:
         cmd = NpmCommand(dist)
         from distutils.errors import DistutilsArgError
         with pytest.raises(DistutilsArgError):
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
     def test_finalize_options_no_instance_dir(self):
         """ instance_dir not found """
@@ -40,7 +40,7 @@ class TestNpmTest:
                 as find_executable:
             find_executable.return_value = '/tmp/npm'
             with pytest.raises(DistutilsArgError):
-                cmd.ensure_finalized()
+                cmd.finalize_options()
 
     def test_finalize_options_ok(self):
         """ instance_dir and command ok """
@@ -60,7 +60,7 @@ class TestNpmTest:
         with mock.patch('build_commands.npm.find_executable') \
                 as find_executable:
             find_executable.return_value = '/tmp/npm'
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
     def test_run_ok(self):
         """ Assert spawn is called with the right parameters """
@@ -80,7 +80,7 @@ class TestNpmTest:
         with mock.patch('build_commands.npm.find_executable') \
                 as find_executable:
             find_executable.return_value = '/tmp/npm'
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
         spawn_mock = mock.MagicMock()
         cmd.spawn = spawn_mock

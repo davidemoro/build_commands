@@ -20,7 +20,7 @@ class TestBowerTest:
         cmd = BowerCommand(dist)
         from distutils.errors import DistutilsArgError
         with pytest.raises(DistutilsArgError):
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
     def test_finalize_options_no_instance_dir(self):
         """ instance_dir not found """
@@ -40,7 +40,7 @@ class TestBowerTest:
                 as find_executable:
             find_executable.return_value = '/tmp/bower'
             with pytest.raises(DistutilsArgError):
-                cmd.ensure_finalized()
+                cmd.finalize_options()
 
     def test_finalize_options_ok(self):
         """ instance_dir and command ok """
@@ -60,7 +60,7 @@ class TestBowerTest:
         with mock.patch('build_commands.bower.find_executable') \
                 as find_executable:
             find_executable.return_value = '/tmp/bower'
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
     def test_run_ok(self):
         """ Assert spawn is called with the right parameters """
@@ -80,7 +80,7 @@ class TestBowerTest:
         with mock.patch('build_commands.bower.find_executable') \
                 as find_executable:
             find_executable.return_value = '/tmp/bower'
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
         spawn_mock = mock.MagicMock()
         cmd.spawn = spawn_mock
@@ -112,7 +112,7 @@ class TestBowerTest:
         with mock.patch('build_commands.bower.find_executable') \
                 as find_executable:
             find_executable.return_value = '/tmp/bower'
-            cmd.ensure_finalized()
+            cmd.finalize_options()
 
         spawn_mock = mock.MagicMock()
         cmd.spawn = spawn_mock
