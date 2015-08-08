@@ -1,6 +1,14 @@
 build_commands
 ==============
 
+|build status|_
+|code coverage|_
+
+.. |build status| image:: https://secure.travis-ci.org/davidemoro/build_commands.png?branch=master
+.. _build status: http://travis-ci.org/davidemoro/build_commands
+.. |code coverage| image:: http://codecov.io/github/davidemoro/build_commands/coverage.svg?branch=master
+.. _code coverage: http://codecov.io/github/davidemoro/build_commands?branch=master
+
 This package provides common setuptools command utilities if you
 need to initialize your package with ``npm``, ``bower``
 or ``gulp`` commands.
