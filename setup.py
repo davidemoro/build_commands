@@ -11,6 +11,10 @@ with open(os.path.join(here, 'CHANGES.rst')) as f:
 requires = [
     ]
 
+test_requires = [
+    'mock',
+    ]
+
 setup(name='build_commands',
       version='0.1.dev0',
       description='build_commands',
@@ -35,4 +39,7 @@ setup(name='build_commands',
       bower = build_commands.setuptools_commands:BowerCommand
       gulp = build_commands.setuptools_commands:GulpCommand
       """,
+      extras_require={
+          'test': test_requires,
+          },
       )
