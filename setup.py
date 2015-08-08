@@ -12,6 +12,9 @@ requires = [
     ]
 
 test_requires = [
+    'pytest>=2.4.2',
+    'pytest-cov',
+    'pytest-pep8!=1.0.3',
     'mock',
     ]
 

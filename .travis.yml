@@ -7,8 +7,8 @@ before_install:
   pip install codecov
 install:
   - python setup.py develop
-  - python setup.py test
+  - pip install build_commands[test]
 script:
-  - py.test
+  - py.test --tb=native --cov=build_commands --cov-report=term-missing
 after_success:
   codecov
