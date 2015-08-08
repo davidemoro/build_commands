@@ -1,7 +1,10 @@
 """develop tests
 """
 import sys
-import os, shutil, tempfile, unittest
+import os
+import shutil
+import tempfile
+import unittest
 import tempfile
 import site
 
@@ -22,6 +25,7 @@ setup(name='foo',
 
 INIT_PY = """print "foo"
 """
+
 
 class TestNpmTest(unittest.TestCase):
 
@@ -87,12 +91,13 @@ class TestNpmTest(unittest.TestCase):
         from build_commands import NpmCommand
         cmd = NpmCommand(dist)
         cmd.user = 1
-        import pdb; pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         cmd.ensure_finalized()
         cmd.install_dir = site.USER_SITE
         cmd.user = 1
         old_stdout = sys.stdout
-        #sys.stdout = StringIO()
+        sys.stdout = StringIO()
         try:
             cmd.run()
         finally:
