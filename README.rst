@@ -57,13 +57,6 @@ Yeoman project with::
 And all your frontend stuff will be processed automatically (SASS, minification,
 uglyfication, etc).
 
-Links
------
-
-Here you can find a project using ``build_commands``:
-
-* https://github.com/Kotti/kotti_frontend
-
 Authors
 =======
 
