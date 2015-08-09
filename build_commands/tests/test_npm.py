@@ -113,3 +113,36 @@ class TestNpmTest:
 
         expected = ['npm', 'install', '--prefix', cmd.instance_dir, cmd.instance_dir]
         spawn_mock.assert_called_once_with(expected)
+
+    def test_run_ok_custom_executable(self):
+        """ Assert spawn is called with the right parameters """
+        from setuptools.dist import Distribution
+        dist = Distribution(
+            dict(name='foo',
+                 packages=['foo'],
+                 use_2to3=True,
+                 version='0.0',
+                 ))
+        dist.script_name = 'setup.py'
+        from build_commands import NpmCommand
+        cmd = NpmCommand(dist)
+        import tempfile
+        cmd.instance_dir = tempfile.mkdtemp()
+        cmd.executable = '/tmp/npm'
+        import mock
+        with mock.patch('build_commands.npm.find_executable') \
+                as find_executable:
+            find_executable.return_value = '/tmp/npm'
+            cmd.finalize_options()
+
+        spawn_mock = mock.MagicMock()
+        cmd.spawn = spawn_mock
+        import sys
+        old_stdout = sys.stdout
+        try:
+            cmd.run()
+        finally:
+            sys.stdout = old_stdout
+
+        expected = ['/tmp/npm', 'install', '--prefix', cmd.instance_dir, cmd.instance_dir]
+        spawn_mock.assert_called_once_with(expected)

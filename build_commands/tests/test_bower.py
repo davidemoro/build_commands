@@ -209,3 +209,36 @@ class TestBowerTest:
 
         expected = ['bower', 'install', '-p']
         spawn_mock.assert_called_once_with(expected)
+
+    def test_run_ok_custom_executable(self):
+        """ Assert spawn is called with the right parameters """
+        from setuptools.dist import Distribution
+        dist = Distribution(
+            dict(name='foo',
+                 packages=['foo'],
+                 use_2to3=True,
+                 version='0.0',
+                 ))
+        dist.script_name = 'setup.py'
+        from build_commands import BowerCommand
+        cmd = BowerCommand(dist)
+        cmd.executable = '/tmp/bower'
+        import tempfile
+        import mock
+        with mock.patch('build_commands.bower.find_executable') \
+                as find_executable:
+            find_executable.return_value = '/tmp/bower'
+            cmd.finalize_options()
+
+        spawn_mock = mock.MagicMock()
+        cmd.spawn = spawn_mock
+        cmd.production = True
+        import sys
+        old_stdout = sys.stdout
+        try:
+            cmd.run()
+        finally:
+            sys.stdout = old_stdout
+
+        expected = ['/tmp/bower', 'install', '-p']
+        spawn_mock.assert_called_once_with(expected)
