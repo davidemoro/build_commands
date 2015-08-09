@@ -28,7 +28,8 @@ Update your ``setup.cfg`` adding the following::
     bower = bower
     gulp = gulp -i your_package/templates -g gulpfile.babel.js
 
-If you are using bower you can add a ``.bowerrc`` file with the 
+If you are using bower you can add a ``.bowerrc`` file to your
+package root (where your ``setup.cfg`` file lives) with the
 following (see http://bower.io/docs/config/#cwd)::
 
     {
