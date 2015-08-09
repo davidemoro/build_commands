@@ -25,8 +25,17 @@ Update your ``setup.cfg`` adding the following::
 
     [aliases]
     npm = npm -i your_package/templates
-    bower = bower -i your_package/templates
+    bower = bower
     gulp = gulp -i your_package/templates -g gulpfile.babel.js
+
+If you are using bower you can add a ``.bowerrc`` file with the 
+following (see http://bower.io/docs/config/#cwd)::
+
+    {
+      "directory": "bower_components",
+      "cwd": "./your_package/templates/"
+    }
+
 
 This way once installed your ``your_package`` you can initialize your
 Yeoman project with::
