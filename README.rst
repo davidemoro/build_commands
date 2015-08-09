@@ -37,6 +37,14 @@ following (see http://bower.io/docs/config/#cwd)::
       "cwd": "./your_package/templates/"
     }
 
+And update your setup.py entry points distutils commands::
+
+      entry_points="""\
+      [distutils.commands]
+      npm = build_commands:NpmCommand
+      bower = build_commands:BowerCommand
+      gulp = build_commands:GulpCommand
+      """,
 
 This way once installed your ``your_package`` you can initialize your
 Yeoman project with::
