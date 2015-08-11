@@ -19,7 +19,7 @@ test_requires = [
     ]
 
 setup(name='build_commands',
-      version='0.0.1.dev0',
+      version='0.0.1',
       description='build_commands',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
