@@ -1,2 +1,4 @@
 include *.txt *.ini *.cfg *.rst
+include .coveragerc
 recursive-include build_commands *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include build_commands *.py
